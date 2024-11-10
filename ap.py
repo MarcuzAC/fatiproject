@@ -92,4 +92,4 @@ def logout():
 
 if __name__ == '__main__':
     # Run the app in debug mode (remove debug=True for production)
-    app.run(debug=True)
+    app.run()
