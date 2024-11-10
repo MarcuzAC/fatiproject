@@ -1,22 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-import pickle  # Uncomment if you plan to load a trained model
-app = Flask(__name__, template_folder='path_to_your_templates_folder')
+import pickle
 
-
-# Initialize Flask app
+# Initialize Flask app (no need to specify template_folder if it's named 'templates')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 app.config['SESSION_TYPE'] = 'filesystem'
 
-# Hardcoded credentials (can use a database for production)
+# Hardcoded credentials (use a secure storage method or database for production)
 USER_CREDENTIALS = {
     'username': 'Fatima',
     'password': generate_password_hash('Fatima123')  # Store password as a hash
 }
 
-# Correct way to open the file and load the model
+# Load the machine learning model
 with open('ml/model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
@@ -24,8 +22,7 @@ with open('ml/model.pkl', 'rb') as model_file:
 def home():
     if 'logged_in' in session:
         return redirect(url_for('predict'))
-    return render_template('login.html')  # Ensure this is `login.html`
-
+    return render_template('login.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -52,7 +49,6 @@ def predict():
     if request.method == 'POST':
         # Retrieve form data
         age = int(request.form['age'])
-        # Map "Male" to 1 and "Female" to 0
         sex = 1 if request.form['sex'] == 'Male' else 0
         highbp = int(request.form['highbp'])
         highchol = int(request.form['highchol'])
@@ -65,21 +61,17 @@ def predict():
         hvyalcoholconsump = int(request.form['hvyalcoholconsump'])
         anyhealthcare = int(request.form['anyhealthcare'])
 
-        
-
-        # Create a feature vector (replace this with the real model input if available)
+        # Create feature vector for model
         features = [[age, sex, highbp, highchol, heart_rate, previous_heart_problems, smoker, stroke, diabetes, physactivity, hvyalcoholconsump, anyhealthcare]]
 
-        # Placeholder for prediction logic
-        # Uncomment the following lines if you have a model loaded
+        # Predict using the model
         prediction1 = model.predict(features)[0]
         probability = model.predict_proba(features)[0][1] * 100  # Assuming binary classifier
 
-        # Temporary dummy prediction logic (replace with actual model prediction)
+        # Determine risk level
         prediction = "Low Risk" if prediction1 == 0 and probability <= 30 else "High Risk"
-        #probability = 85  # This is a placeholder probability
 
-        # Pass prediction and probability to the template
+        # Pass prediction and adjusted probability to the template
         return render_template('prediction_form.html', prediction=prediction, probability=probability + 30)
 
     return render_template('prediction_form.html')
@@ -92,4 +84,4 @@ def logout():
 
 if __name__ == '__main__':
     # Run the app in debug mode (remove debug=True for production)
-    app.run()
+    app.run(debug=True)
