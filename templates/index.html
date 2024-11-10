@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        /* CSS styling for the forms */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1, h3 { text-align: center; color: #333; }
+        label { font-size: 14px; color: #555; display: block; margin-bottom: 5px; }
+        input, select {
+            width: 100%; padding: 10px; margin-bottom: 10px;
+            border-radius: 4px; border: 1px solid #ccc; font-size: 14px;
+        }
+        button {
+            width: 100%; padding: 10px; background-color: #4CAF50;
+            color: white; font-size: 16px; border: none; border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #45a049; }
+        .result {
+            margin-top: 20px; padding: 10px; background-color: #f9f9f9;
+            border: 1px solid #ddd; border-radius: 4px; text-align: center;
+        }
+        .error { color: red; font-size: 14px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    {% if not session.get('logged_in') %}
+        <h1>Login</h1>
+        <form action="{{ url_for('login') }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="error">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    {% else %}
+        <h1>Heart Disease Prediction</h1>
+        <form action="{{ url_for('predict') }}" method="POST">
+            <!-- Input fields for prediction -->
+            <label for="age">Age:</label>
+            <input type="number" name="age" id="age" required>
+
+            <label for="sex">Sex:</label>
+            <select name="sex" id="sex" required>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+            </select>
+
+            <label for="highbp">High Blood Pressure (1 for Yes, 0 for No):</label>
+            <input type="number" name="highbp" id="highbp" min="0" max="1" required>
+
+            <label for="highchol">High Cholesterol (1 for Yes, 0 for No):</label>
+            <input type="number" name="highchol" id="highchol" min="0" max="1" required>
+
+            <label for="heart_rate">Heart Rate:</label>
+            <input type="number" name="heart_rate" id="heart_rate" step="0.1" required>
+
+            <label for="previous_heart_problems">Previous Heart Problems (1 for Yes, 0 for No):</label>
+            <input type="number" name="previous_heart_problems" id="previous_heart_problems" min="0" max="1" required>
+
+            <label for="smoker">Smoker (1 for Yes, 0 for No):</label>
+            <input type="number" name="smoker" id="smoker" min="0" max="1" required>
+
+            <label for="stroke">Stroke (1 for Yes, 0 for No):</label>
+            <input type="number" name="stroke" id="stroke" min="0" max="1" required>
+
+            <label for="diabetes">Diabetes (1 for Yes, 0 for No):</label>
+            <input type="number" name="diabetes" id="diabetes" min="0" max="1" required>
+
+            <label for="physactivity">Physical Activity (1 for Yes, 0 for No):</label>
+            <input type="number" name="physactivity" id="physactivity" min="0" max="1" required>
+
+            <label for="hvyalcoholconsump">Heavy Alcohol Consumption (1 for Yes, 0 for No):</label>
+            <input type="number" name="hvyalcoholconsump" id="hvyalcoholconsump" min="0" max="1" required>
+
+            <label for="anyhealthcare">Received Healthcare (1 for Yes, 0 for No):</label>
+            <input type="number" name="anyhealthcare" id="anyhealthcare" min="0" max="1" required>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction %}
+            <div class="result">
+                <h3>Prediction Result:</h3>
+                <p>{{ prediction }}</p>
+                <p>Probability: {{ probability }}%</p>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+</body>
+</html>

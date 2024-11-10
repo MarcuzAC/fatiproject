@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        /* Styling for better layout */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .result {
+            background: #e7f3e7;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #d4edd4;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Heart Disease Prediction</h2>
+    <form method="POST" action="/predict">
+
+        <div style="margin-bottom: 20px;">
+            <label for="age" style="font-size: 16px;">Age:</label>
+            <input type="number" name="age" required min="1" style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+        </div>        
+    
+        <div style="margin-bottom: 20px;">
+            <label for="sex" style="font-size: 16px;">Sex (Female or Male):</label>
+            <select name="sex" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="highbp" style="font-size: 16px;">High Blood Pressure?</label>
+            <select name="highbp" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="highchol" style="font-size: 16px;">High Cholesterol?</label>
+            <select name="highchol" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="heart_rate" style="font-size: 16px;">Heart Rate:</label>
+            <input type="number" name="heart_rate" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="previous_heart_problems" style="font-size: 16px;">Previous Heart Problems?</label>
+            <select name="previous_heart_problems" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="smoker" style="font-size: 16px;">Smoker?</label>
+            <select name="smoker" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="stroke" style="font-size: 16px;">Previous Stroke?</label>
+            <select name="stroke" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="diabetes" style="font-size: 16px;">Diabetes?</label>
+            <select name="diabetes" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="physactivity" style="font-size: 16px;">Physical Activity?</label>
+            <select name="physactivity" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="hvyalcoholconsump" style="font-size: 16px;">Heavy Alcohol Consumption?</label>
+            <select name="hvyalcoholconsump" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 20px;">
+            <label for="anyhealthcare" style="font-size: 16px;">Any Healthcare?</label>
+            <select name="anyhealthcare" required style="width: 100%; padding: 10px; font-size: 14px; margin-top: 5px;">
+                <option value="" disabled selected>Select...</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </select>
+        </div>
+    
+        <div style="margin-bottom: 30px;"></div>
+    
+        <input type="submit" value="Predict" style="width: 100%; padding: 12px; font-size: 16px; background-color: #4CAF50; color: white; border: none; cursor: pointer; margin-top: 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    </form>
+    
+
+
+    <!-- Display prediction and probability if available -->
+    {% if prediction is not none and probability is not none %}
+    <div class="result">
+        <h3>Prediction Result:</h3>
+        <p><strong>Risk Level:</strong> {{ prediction }}</p>
+        <p><strong>Probability of Heart Disease:</strong> {{ probability }}%</p>
+    </div>
+    {% endif %}
+
+</body>
+</html>
