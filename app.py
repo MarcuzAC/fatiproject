@@ -5,8 +5,7 @@ import pickle
 
 # Initialize Flask app (no need to specify template_folder if it's named 'templates')
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key')  # Use an environment variable for security
-app.config['SESSION_TYPE'] = 'filesystem'
+
 
 # Hardcoded credentials (use a secure storage method or database for production)
 USER_CREDENTIALS = {
