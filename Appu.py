@@ -11,12 +11,9 @@ import threading
 import serial
 import time
 
-import serial
-import time
-
 # Initialize serial connection to Arduino
-arduino = serial.Serial('COM7', 9600, timeout=1)  # Replace 'COM3' with the correct port for your system
-time.sleep(2)  # Give time for connection to establish
+arduino = serial.Serial('COM7', 9600, timeout=1) 
+time.sleep(2) 
 
 
 def start_heart_rate_reading():
@@ -38,7 +35,7 @@ def start_heart_rate_reading():
             # Optional delay if needed to allow time between readings
             time.sleep(1)
         else:
-            print(line)  # Print any other messages from Arduino, e.g., "Waiting..."
+            print(line) 
     
     # Calculate and return the average heart rate after three readings
     average_heart_rate = sum(heart_rate_readings) / len(heart_rate_readings)
@@ -51,4 +48,4 @@ try:
 except KeyboardInterrupt:
     print("Stopping heart rate reading.")
 finally:
-    arduino.close()  # Close the serial connection when done
+    arduino.close()  
