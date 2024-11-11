@@ -3,14 +3,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import pickle
 
-# Initialize Flask app (no need to specify template_folder if it's named 'templates')
+# Initialize Flask app
 app = Flask(__name__)
 
+# Set a secret key for session management. 
+# In production, use an environment variable instead of hardcoding.
+app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key_here')
 
-# Hardcoded credentials (use a secure storage method or database for production)
+# Hardcoded credentials (use secure storage for production)
 USER_CREDENTIALS = {
     'username': 'Fatima',
-    'password': generate_password_hash('Fatima123')  # Store password as a hash
+    'password': generate_password_hash('Fatima123')
 }
 
 # Load the machine learning model
@@ -29,12 +32,10 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Handle login form submission
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Check credentials
         if username == USER_CREDENTIALS['username'] and check_password_hash(USER_CREDENTIALS['password'], password):
             session['logged_in'] = True
             return redirect(url_for('predict'))
@@ -45,12 +46,10 @@ def login():
 
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
-    # Check if user is logged in
     if 'logged_in' not in session:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        # Retrieve form data
         try:
             age = int(request.form['age'])
             sex = 1 if request.form['sex'] == 'Male' else 0
@@ -65,19 +64,14 @@ def predict():
             hvyalcoholconsump = int(request.form['hvyalcoholconsump'])
             anyhealthcare = int(request.form['anyhealthcare'])
 
-            # Create feature vector for model
             features = [[age, sex, highbp, highchol, heart_rate, previous_heart_problems, smoker,
                          stroke, diabetes, physactivity, hvyalcoholconsump, anyhealthcare]]
 
-            # Predict using the model
             if model:
                 prediction1 = model.predict(features)[0]
-                probability = model.predict_proba(features)[0][1] * 100  # Assuming binary classifier
+                probability = model.predict_proba(features)[0][1] * 100
 
-                # Determine risk level
                 prediction = "Low Risk" if prediction1 == 0 and probability <= 30 else "High Risk"
-
-                # Pass prediction and adjusted probability to the template
                 return render_template('prediction_form.html', prediction=prediction, probability=probability + 30)
             else:
                 flash("Model not loaded. Please check the server configuration.", "error")
@@ -90,11 +84,9 @@ def predict():
 
 @app.route('/logout')
 def logout():
-    # Clear session and redirect to login
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    # Configure app to run on host 0.0.0.0 and use the specified port
-    port = int(os.environ.get('PORT', 5000))  # Use default port 5000 if PORT not set
+    port = int(os.environ.get('PORT', 5000))
     app.run(host="0.0.0.0", port=port)
